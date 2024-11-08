@@ -151,6 +151,31 @@ class mediaController {
             });
         }
     }
+
+    static async getAllimage(req, res) {
+        try {
+            const images = await prisma.image.findMany(
+                {
+                    orderBy: {
+                        id: 'asc'
+                    }
+                }
+            );
+
+            res.status(200).json({
+                status: 'success',
+                message: 'get all image success',
+                data: images
+            });
+
+        } catch (error) {
+            res.status(500).json({
+                status: 'error',
+                message: error.message
+            });
+        }
+    }
+
 }
 
 module.exports = mediaController;
