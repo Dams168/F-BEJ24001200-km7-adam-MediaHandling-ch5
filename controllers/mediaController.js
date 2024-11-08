@@ -112,6 +112,45 @@ class mediaController {
         }
 
     }
+
+    static async deleteImage(req, res) {
+        try {
+            const { id } = req.params;
+
+            const image = await prisma.image.findUnique({
+                where: {
+                    id: Number(id)
+                }
+            });
+
+            if (!image) {
+                return res.status(404).json({
+                    status: 'error',
+                    message: 'image not found'
+                });
+            }
+
+            const deleteImage = await imagekit.deleteFile(image.imageFileId);
+
+            const result = await prisma.image.delete({
+                where: {
+                    id: Number(id)
+                }
+            });
+
+            res.status(200).json({
+                status: 'success',
+                message: 'delete image success',
+                data: result
+            });
+
+        } catch (error) {
+            res.status(500).json({
+                status: 'error',
+                message: error.message
+            });
+        }
+    }
 }
 
 module.exports = mediaController;
