@@ -176,6 +176,36 @@ class mediaController {
         }
     }
 
+    static async getImageById(req, res) {
+        try {
+            const { id } = req.params;
+            const image = await prisma.image.findUnique({
+                where: {
+                    id: Number(id)
+                }
+            });
+
+            if (!image) {
+                return res.status(404).json({
+                    status: 'error',
+                    message: 'image not found'
+                });
+            }
+
+            res.status(200).json({
+                status: 'success',
+                message: 'get image by id success',
+                data: image
+            });
+
+        } catch (error) {
+            res.status(500).json({
+                status: 'error',
+                message: error.message
+            })
+        }
+    }
+
 }
 
 module.exports = mediaController;
